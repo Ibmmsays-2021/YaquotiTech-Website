@@ -1,0 +1,76 @@
+<app-hero
+  size="display"
+  [heading]="i18n.t(home.title)"
+  [lead]="i18n.t(home.lead)"
+>
+  <ng-container ngProjectAs="[heroAction]">
+    <a appButton="primary" [routerLink]="i18n.link('products')">{{
+      i18n.t(ui.common.exploreProducts)
+    }}</a>
+    <button type="button" appButton="secondary" (click)="contact.open()">
+      {{ i18n.t(ui.nav.getInTouch) }}
+    </button>
+  </ng-container>
+</app-hero>
+
+<section class="section" aria-labelledby="h-products">
+  <div class="container">
+    <app-section-header
+      headingId="h-products"
+      [heading]="i18n.t(home.productsHead.title)"
+      [desc]="i18n.t(home.productsHead.desc)"
+    />
+    <app-product-rows [products]="products" [detailed]="true" />
+  </div>
+</section>
+
+<!-- Below the fold: server-rendered now, hydrated when scrolled into view. -->
+@defer (on immediate; hydrate on viewport) {
+  <section class="section" aria-labelledby="h-services">
+    <div class="container">
+      <app-section-header
+        headingId="h-services"
+        [heading]="i18n.t(home.servicesHead.title)"
+        [desc]="i18n.t(home.servicesHead.desc)"
+      />
+      <div class="services">
+        @for (s of services; track s.id) {
+          <article class="service">
+            <span class="ico"><app-icon [name]="s.icon" [size]="22" /></span>
+            <h3>
+              <a [routerLink]="i18n.link('services/' + s.id)">{{ i18n.t(s.title) }}</a>
+            </h3>
+            <p>{{ i18n.t(s.summary) }}</p>
+            <ul role="list">
+              @for (c of s.cover.slice(0, 4); track $index) {
+                <li>{{ i18n.t(c.title) }}</li>
+              }
+            </ul>
+            <a class="more" [routerLink]="i18n.link('services/' + s.id)">{{
+              i18n.f(ui.common.detailsOf, i18n.t(s.title))
+            }}</a>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="h-why">
+    <div class="container">
+      <app-section-header headingId="h-why" [heading]="i18n.t(home.whyHead)" />
+      <dl class="why">
+        @for (w of home.why; track $index) {
+          <div>
+            <dt><app-icon [name]="w.icon" [size]="20" />{{ i18n.t(w.title) }}</dt>
+            <dd>{{ i18n.t(w.desc) }}</dd>
+          </div>
+        }
+      </dl>
+    </div>
+  </section>
+
+  <app-cta-band [heading]="i18n.t(home.cta.title)" [desc]="i18n.t(home.cta.desc)" />
+} @placeholder {
+  <!-- Reserves roughly the height of the three sections above for in-app navigation. -->
+  <div class="below-fold-placeholder" aria-hidden="true"></div>
+}

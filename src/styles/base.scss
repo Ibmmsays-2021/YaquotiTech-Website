@@ -1,0 +1,201 @@
+// Reset, layout primitives and the few global utilities. Logical properties throughout so RTL works.
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 24px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+// Docs pages read on white; only their sidebar keeps the tinted page colour (see DocsLayout).
+body.docs-page {
+  --bg: #fff;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  min-height: 100vh;
+  overflow-x: clip;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+a {
+  color: var(--link);
+  text-decoration: none;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+
+  &:hover {
+    color: var(--link-hover);
+    text-decoration: underline;
+  }
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+// No double-tap zoom delay on controls; a quiet, intentional tap highlight.
+a,
+button,
+input,
+select,
+textarea,
+summary,
+label {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgb(123 125 244 / 0.15);
+}
+
+// Long words, URLs and identifiers wrap instead of overflowing.
+h1,
+h2,
+h3,
+p,
+li,
+dd,
+td {
+  overflow-wrap: break-word;
+}
+
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--primary-200);
+  color: var(--text);
+}
+
+// ---------- layout ----------
+.container {
+  width: var(--page-width);
+  margin-inline: auto;
+}
+
+.section {
+  padding-block: var(--section-y);
+}
+
+// Sections are separated by whitespace alone (no divider lines), so back-to-back sections share
+// the space instead of doubling it.
+.section + .section {
+  padding-block-start: calc(var(--section-y) * 0.5);
+}
+
+.section--tight {
+  padding-block: clamp(48px, 7vw, 88px);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stack-gap, 1rem);
+}
+
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cluster-gap, 0.75rem);
+}
+
+.grid {
+  display: grid;
+  gap: var(--grid-gap, 24px);
+}
+
+.grid--2 {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+}
+
+.grid--3 {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+}
+
+// Icons that point "forward" flip in RTL.
+[dir='rtl'] .flip-rtl {
+  transform: scaleX(-1);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  inset-inline-start: 12px;
+  inset-block-start: 12px;
+  z-index: 100;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--color-navy);
+  color: #fff;
+  transform: translateY(-200%);
+
+  &:focus {
+    transform: none;
+    color: #fff;
+  }
+}
+
+// ---------- CDK overlay / dialog ----------
+.git-backdrop,
+.sheet-backdrop {
+  background: rgb(30 26 74 / 0.36);
+  backdrop-filter: blur(2px);
+}
+
+.cdk-overlay-pane.git-panel {
+  max-height: calc(100dvh - 48px);
+}
+
+@media (max-width: 640px) {
+  .cdk-overlay-pane.git-panel {
+    max-width: 100vw !important;
+    width: 100vw !important;
+    height: 100dvh;
+    max-height: 100dvh;
+  }
+}

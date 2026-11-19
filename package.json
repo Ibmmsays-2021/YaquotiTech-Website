@@ -1,10 +1,44 @@
 {
-  "name": "company-website",
-  "private": true,
-  "type": "module",
+  "name": "yaquoti-tech",
+  "version": "0.0.0",
   "scripts": {
-    "build": "node build.mjs",
-    "serve": "node serve.mjs",
-    "dev": "node build.mjs && node serve.mjs"
+    "ng": "ng",
+    "guides": "node scripts/guides.mjs",
+    "start": "node scripts/guides.mjs && ng serve",
+    "build": "node scripts/guides.mjs && ng build && node scripts/sitemap.mjs",
+    "build:dev": "ng build --configuration development",
+    "watch": "ng build --watch --configuration development",
+    "lint": "ng lint",
+    "format": "prettier --write \"src/**/*.{ts,html,scss}\" \"scripts/**/*.mjs\"",
+    "format:check": "prettier --check \"src/**/*.{ts,html,scss}\" \"scripts/**/*.mjs\"",
+    "preview": "node scripts/preview.mjs"
+  },
+  "private": true,
+  "packageManager": "npm@11.19.1",
+  "dependencies": {
+    "@angular/cdk": "^22.2.7",
+    "@angular/common": "^22.2.0",
+    "@angular/compiler": "^22.2.0",
+    "@angular/core": "^22.2.0",
+    "@angular/forms": "^22.2.0",
+    "@angular/platform-browser": "^22.2.0",
+    "@angular/platform-server": "^22.2.0",
+    "@angular/router": "^22.2.0",
+    "@angular/ssr": "^22.2.7",
+    "lucide": "^1.73.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^22.2.7",
+    "@angular/cli": "^22.2.7",
+    "@angular/compiler-cli": "^22.2.0",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.12.0",
+    "angular-eslint": "22.7.0",
+    "eslint": "^10.14.0",
+    "prettier": "^3.8.1",
+    "typescript": "~6.0.2",
+    "typescript-eslint": "8.72.1"
   }
 }

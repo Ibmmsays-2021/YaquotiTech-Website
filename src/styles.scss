@@ -1,0 +1,5 @@
+// Global styles: tokens → type → base. Component styles live next to each component.
+@use '@angular/cdk/overlay-prebuilt.css';
+@use 'tokens';
+@use 'typography';
+@use 'base';

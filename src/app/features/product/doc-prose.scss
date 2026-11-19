@@ -1,0 +1,142 @@
+// Typography for documentation-style content (docs, APIs). Imported by those pages.
+.doc-head {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-block-end: 8px;
+}
+
+// Docs type scale (smaller than marketing pages): title ≤ 34px, lead 17px, body 15px.
+.doc-head h1 {
+  font-size: clamp(1.625rem, 1.35rem + 0.9vw, 2.125rem);
+}
+
+.doc-head .lead {
+  font-size: 1.0625rem;
+  max-width: none;
+}
+
+.doc-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.doc-ico {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border-radius: var(--radius);
+  background: var(--primary-50);
+  color: var(--primary-700);
+}
+
+// Section permalinks ("#"), shown on hover or keyboard focus.
+.permalink {
+  margin-inline-start: 10px;
+  color: var(--text-muted);
+  font-weight: 500;
+  text-decoration: none;
+  opacity: 0;
+}
+
+h2.doc-h:hover .permalink,
+.permalink:focus-visible {
+  opacity: 1;
+}
+
+.permalink:hover {
+  color: var(--link);
+}
+
+@media (hover: none) {
+  .permalink {
+    opacity: 1;
+  }
+}
+
+h2.doc-h {
+  margin-block: 44px 14px;
+  padding-block-start: 28px;
+  border-block-start: 1px solid var(--border);
+  font-size: 1.1875rem;
+  scroll-margin-top: calc(var(--header-h) + 24px);
+}
+
+.doc p,
+.doc-text {
+  color: var(--text-body);
+}
+
+.num-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+
+  li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 12px;
+    color: var(--text-body);
+
+    &::before {
+      content: counter(step);
+      display: inline-grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--primary-100);
+      color: var(--primary-800);
+      font-size: 0.8125rem;
+      font-weight: 600;
+    }
+  }
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+
+  th,
+  td {
+    padding: 12px 16px;
+    text-align: start;
+    vertical-align: top;
+    border-block-end: 1px solid var(--border);
+  }
+
+  tr:last-child td {
+    border-block-end: 0;
+  }
+
+  th {
+    background: var(--navy-50);
+    font-size: 0.75rem;
+    color: var(--text);
+  }
+
+  td:first-child {
+    white-space: nowrap;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  td {
+    color: var(--text-body);
+  }
+}

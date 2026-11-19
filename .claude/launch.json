@@ -1,6 +1,7 @@
 {
   "version": "0.0.1",
   "configurations": [
-    { "name": "site", "runtimeExecutable": "node", "runtimeArgs": ["serve.mjs", "4173"], "port": 4173 }
+    { "name": "site", "runtimeExecutable": "node", "runtimeArgs": ["scripts/preview.mjs", "4300"], "port": 4300 },
+    { "name": "legacy", "runtimeExecutable": "node", "runtimeArgs": ["legacy/serve.mjs", "4173"], "port": 4173 }
   ]
 }

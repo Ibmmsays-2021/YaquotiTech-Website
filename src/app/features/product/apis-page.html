@@ -1,0 +1,165 @@
+@let p = product();
+@let a = api();
+<app-hero class="compact" [heading]="i18n.t(ui.productNav.apis)" [lead]="i18n.t(a.overview)">
+  <app-breadcrumbs
+    [items]="[{ label: i18n.t(p.name), link: link() }, { label: i18n.t(ui.productNav.apis) }]"
+  />
+  <ng-container ngProjectAs="[heroAction]">
+    <a appButton="secondary" [routerLink]="link('docs')">{{ i18n.t(ui.common.viewDocs) }}</a>
+  </ng-container>
+</app-hero>
+
+<div class="container ref">
+  <nav class="index" [attr.aria-label]="i18n.t(ui.ref.referenceNav)">
+    <button
+      type="button"
+      class="browse"
+      [attr.aria-expanded]="navOpen()"
+      aria-controls="api-index"
+      (click)="navOpen.set(!navOpen())"
+    >
+      {{ i18n.t(ui.ref.browseReference) }}
+      <app-icon name="chevron" [size]="18" [class.rot]="navOpen()" />
+    </button>
+    <div id="api-index" class="panel" [class.open]="navOpen()">
+      <ul role="list">
+        <li>
+          <a
+            class="link"
+            routerLink="."
+            (click)="navOpen.set(false)"
+            fragment="overview"
+            [class.active]="active() === 'overview'"
+            [attr.aria-current]="active() === 'overview' ? 'location' : null"
+            >{{ i18n.t(ui.common.overview) }}</a
+          >
+        </li>
+        <li>
+          <a
+            class="link"
+            routerLink="."
+            (click)="navOpen.set(false)"
+            fragment="authentication"
+            [class.active]="active() === 'authentication'"
+            [attr.aria-current]="active() === 'authentication' ? 'location' : null"
+            >{{ i18n.t(ui.common.authentication) }}</a
+          >
+        </li>
+      </ul>
+      @for (g of a.groups; track g.id) {
+        <p class="group">{{ i18n.t(g.title) }}</p>
+        <ul role="list">
+          @for (e of g.endpoints; track e.id) {
+            <li>
+              <a
+                class="link"
+                routerLink="."
+                (click)="navOpen.set(false)"
+                [fragment]="e.id"
+                [class.active]="active() === e.id"
+                [attr.aria-current]="active() === e.id ? 'location' : null"
+              >
+                <span [class]="'method tone-' + methodTone[e.method]" dir="ltr">{{
+                  e.method
+                }}</span>
+                <span class="text">{{ i18n.t(e.title) }}</span>
+              </a>
+            </li>
+          }
+        </ul>
+      }
+      <ul role="list" class="last">
+        <li>
+          <a
+            class="link"
+            routerLink="."
+            (click)="navOpen.set(false)"
+            fragment="errors"
+            [class.active]="active() === 'errors'"
+            [attr.aria-current]="active() === 'errors' ? 'location' : null"
+            >{{ i18n.t(ui.ref.errors) }}</a
+          >
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="body">
+    <section class="block" id="overview" aria-labelledby="overview-h">
+      <h2 id="overview-h">{{ i18n.t(ui.common.overview) }}</h2>
+      <dl class="meta">
+        <div>
+          <dt>{{ i18n.t(ui.common.baseUrl) }}</dt>
+          <dd>
+            <code dir="ltr" translate="no">{{ a.baseUrl }}</code>
+          </dd>
+        </div>
+        <div>
+          <dt>{{ i18n.t(ui.ref.format) }}</dt>
+          <dd>{{ i18n.t(a.format) }}</dd>
+        </div>
+        <div>
+          <dt>{{ i18n.t(ui.ref.versioning) }}</dt>
+          <dd>{{ i18n.t(a.versioning) }}</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="block split" id="authentication" aria-labelledby="auth-h">
+      <div class="prose">
+        <h2 id="auth-h">{{ i18n.t(ui.common.authentication) }}</h2>
+        <p>{{ i18n.t(a.auth) }}</p>
+      </div>
+      <app-code-block [code]="a.authExample" label="curl" />
+    </section>
+
+    @for (g of a.groups; track g.id) {
+      <section class="group-section" [id]="g.id" [attr.aria-labelledby]="g.id + '-h'">
+        <h2 [id]="g.id + '-h'">{{ i18n.t(g.title) }}</h2>
+        @for (e of g.endpoints; track e.id) {
+          <app-api-endpoint [endpoint]="e" />
+        }
+      </section>
+    }
+
+    <section class="block split" id="errors" aria-labelledby="errors-h">
+      <div class="prose">
+        <h2 id="errors-h">{{ i18n.t(ui.ref.errors) }}</h2>
+        <p>{{ i18n.t(a.errors.overview) }}</p>
+        <div class="table-wrap" tabindex="0" role="region" aria-labelledby="errors-cap">
+          <table>
+            <caption id="errors-cap">
+              {{
+                i18n.t(ui.ref.errorResponses)
+              }}
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">{{ i18n.t(ui.ref.status) }}</th>
+                <th scope="col">{{ i18n.t(ui.ref.meaning) }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (c of a.errors.codes; track c.status) {
+                <tr>
+                  <td>
+                    <code translate="no">{{ c.status }}</code>
+                  </td>
+                  <td>{{ i18n.t(c.meaning) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <app-code-block [code]="a.errors.example" [label]="i18n.t(ui.ref.errorBody)" />
+    </section>
+  </div>
+</div>
+
+<app-cta-band
+  [heading]="i18n.t(home.cta.title)"
+  [desc]="i18n.t(home.cta.desc)"
+  [topic]="p.id"
+  intent="question"
+/>

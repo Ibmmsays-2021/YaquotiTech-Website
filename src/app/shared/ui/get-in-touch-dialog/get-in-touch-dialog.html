@@ -1,0 +1,164 @@
+<div class="git" [attr.dir]="i18n.dir()" [attr.lang]="i18n.lang()">
+  <header class="head">
+    <div>
+      <h2 id="git-title">{{ i18n.t(c.title) }}</h2>
+      <p class="lead">{{ i18n.t(c.lead) }}</p>
+    </div>
+    <button type="button" class="close" (click)="close()" [attr.aria-label]="i18n.t(ui.nav.close)">
+      <app-icon name="x" [size]="20" />
+    </button>
+  </header>
+
+  @if (state() === 'sent' || state() === 'handed-off') {
+    <div class="done" role="status">
+      <span class="done__icon"><app-icon name="check" [size]="22" [stroke]="2" /></span>
+      <h3>{{ i18n.t(c.successTitle) }}</h3>
+      <p>{{ i18n.t(state() === 'sent' ? c.successSent : c.successMailto) }}</p>
+      <button type="button" appButton="secondary" (click)="close()">
+        {{ i18n.t(ui.nav.close) }}
+      </button>
+    </div>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="row">
+        <div class="field" [class.has-error]="invalid('name')">
+          <label for="git-name"
+            >{{ i18n.t(c.name) }} <span class="req" aria-hidden="true">*</span></label
+          >
+          <input
+            id="git-name"
+            name="name"
+            formControlName="name"
+            autocomplete="name"
+            required
+            [attr.aria-invalid]="invalid('name')"
+            [attr.aria-describedby]="invalid('name') ? 'git-name-err' : null"
+          />
+          @if (invalid('name')) {
+            <p class="err" id="git-name-err">{{ errorFor('name') }}</p>
+          }
+        </div>
+        <div class="field" [class.has-error]="invalid('email')">
+          <label for="git-email"
+            >{{ i18n.t(c.email) }} <span class="req" aria-hidden="true">*</span></label
+          >
+          <input
+            id="git-email"
+            name="email"
+            type="email"
+            formControlName="email"
+            autocomplete="email"
+            inputmode="email"
+            spellcheck="false"
+            translate="no"
+            dir="ltr"
+            required
+            [attr.aria-invalid]="invalid('email')"
+            [attr.aria-describedby]="invalid('email') ? 'git-email-err' : null"
+          />
+          @if (invalid('email')) {
+            <p class="err" id="git-email-err">{{ errorFor('email') }}</p>
+          }
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="git-company"
+            >{{ i18n.t(c.company) }} <span class="opt">({{ i18n.t(c.optional) }})</span></label
+          >
+          <input
+            id="git-company"
+            name="company"
+            formControlName="company"
+            autocomplete="organization"
+          />
+        </div>
+        <div class="field">
+          <label for="git-phone"
+            >{{ i18n.t(c.phone) }} <span class="opt">({{ i18n.t(c.optional) }})</span></label
+          >
+          <input
+            id="git-phone"
+            name="phone"
+            type="tel"
+            formControlName="phone"
+            autocomplete="tel"
+            dir="ltr"
+          />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="git-topic"
+            >{{ i18n.t(c.topic) }} <span class="req" aria-hidden="true">*</span></label
+          >
+          <div class="select">
+            <select id="git-topic" name="topic" formControlName="topic" required>
+              @for (t of topics; track t.id) {
+                <option [value]="t.id">{{ i18n.t(t.label) }}</option>
+              }
+            </select>
+            <app-icon name="chevron" [size]="16" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="git-intent">{{ i18n.t(c.intent) }}</label>
+          <div class="select">
+            <select id="git-intent" name="intent" formControlName="intent">
+              @for (it of intents; track it) {
+                <option [value]="it">{{ i18n.t(c.intents[it]) }}</option>
+              }
+            </select>
+            <app-icon name="chevron" [size]="16" />
+          </div>
+        </div>
+      </div>
+
+      <div class="field" [class.has-error]="invalid('message')">
+        <label for="git-message"
+          >{{ i18n.t(c.message) }} <span class="req" aria-hidden="true">*</span></label
+        >
+        <textarea
+          id="git-message"
+          name="message"
+          formControlName="message"
+          rows="5"
+          autocomplete="off"
+          required
+          [attr.aria-invalid]="invalid('message')"
+          [attr.aria-describedby]="invalid('message') ? 'git-message-err' : null"
+        ></textarea>
+        @if (invalid('message')) {
+          <p class="err" id="git-message-err">{{ errorFor('message') }}</p>
+        }
+      </div>
+
+      @if (state() === 'error') {
+        <p class="alert" role="alert">{{ i18n.t(c.error) }}</p>
+      }
+
+      <div class="actions">
+        <button
+          type="submit"
+          appButton="primary"
+          [disabled]="state() === 'sending'"
+          [attr.aria-busy]="state() === 'sending'"
+        >
+          @if (state() === 'sending') {
+            <span class="spinner" aria-hidden="true"></span>
+          }
+          {{ i18n.t(state() === 'sending' ? c.sending : c.send) }}
+        </button>
+        <div class="alt">
+          <p><span class="req" aria-hidden="true">*</span> {{ i18n.t(c.requiredHint) }}</p>
+          <p>
+            {{ i18n.t(c.orEmail) }}
+            <a [href]="'mailto:' + brand.email" dir="ltr" translate="no">{{ brand.email }}</a>
+          </p>
+        </div>
+      </div>
+    </form>
+  }
+</div>

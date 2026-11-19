@@ -1,0 +1,202 @@
+// A release on the timeline. The spine is a hairline; each release has a square node on it.
+:host {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+  gap: clamp(24px, 4vw, 48px);
+  padding-block-end: 40px;
+  scroll-margin-top: calc(var(--header-h) + 96px);
+}
+
+// spine
+:host::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 5px;
+  inset-block: 14px 0;
+  width: 1px;
+  background: var(--border-strong);
+}
+
+:host(:last-child)::before {
+  inset-block-end: auto;
+  height: 48px;
+  background: linear-gradient(var(--border-strong), transparent);
+}
+
+.when {
+  position: sticky;
+  inset-block-start: calc(var(--header-h) + 96px);
+  align-self: start;
+  display: grid;
+  gap: 4px;
+  padding-inline-start: 32px;
+}
+
+.node {
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 8px;
+  width: 11px;
+  height: 11px;
+  background: var(--color-navy);
+}
+
+:host(:first-child) .node {
+  background: var(--color-primary);
+}
+
+.version {
+  font-family: var(--font-mono);
+  font-size: 1.125rem;
+  letter-spacing: 0;
+  justify-self: start;
+}
+
+.date {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.entry {
+  display: grid;
+  gap: 24px;
+  padding-block-end: 32px;
+  padding-inline-start: 21px;
+  border-block-end: 1px solid var(--border);
+  border-inline-start: 3px solid transparent;
+}
+
+// A release opened from a link is marked on its start edge (logical border: mirrors in RTL).
+:host(:target) .entry {
+  border-inline-start-color: var(--color-primary);
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.summary {
+  font-size: 1.125rem;
+  line-height: 1.5;
+  color: var(--text);
+  max-width: 34em;
+}
+
+.permalink {
+  flex: none;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--navy-500);
+  }
+}
+
+.groups {
+  display: grid;
+  gap: 22px;
+}
+
+.group {
+  display: grid;
+  gap: 10px;
+}
+
+.cat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--fg-tone);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+ul {
+  display: grid;
+  gap: 10px;
+}
+
+li {
+  position: relative;
+  padding-inline-start: 20px;
+  color: var(--text-body);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block-start: 0.85em;
+    width: 8px;
+    height: 1px;
+    background: var(--fg-tone);
+  }
+}
+
+.tone-green {
+  --fg-tone: var(--status-green-fg);
+}
+.tone-sky {
+  --fg-tone: var(--status-sky-fg);
+}
+.tone-primary {
+  --fg-tone: var(--status-primary-fg);
+}
+.tone-red {
+  --fg-tone: var(--status-red-fg);
+}
+
+.toggle {
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--link);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+@media (max-width: 900px) {
+  :host {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .when {
+    position: relative;
+    inset-block-start: auto;
+  }
+
+  .entry {
+    padding-inline-start: 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .head {
+    flex-direction: column;
+  }
+}

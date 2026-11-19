@@ -1,0 +1,58 @@
+@let p = product();
+<app-hero
+  class="compact"
+  [heading]="i18n.t(ui.productNav.releaseNotes)"
+  [lead]="i18n.f(ui.ref.releasesLead, i18n.t(p.name))"
+>
+  <app-breadcrumbs
+    [items]="[
+      { label: i18n.t(p.name), link: link() },
+      { label: i18n.t(ui.productNav.releaseNotes) },
+    ]"
+  />
+</app-hero>
+
+<div class="container">
+  <div class="filters" role="group" [attr.aria-label]="i18n.t(ui.ref.filterByCategory)">
+    @for (c of categories; track c) {
+      <button
+        type="button"
+        [class]="'chip tone-' + tone[c]"
+        [attr.aria-pressed]="filter().has(c)"
+        (click)="toggleCategory(c)"
+      >
+        <span class="dot" aria-hidden="true"></span>{{ i18n.t(ui.releaseCategory[c]) }}
+      </button>
+    }
+    @if (filter().size) {
+      <button type="button" class="clear" (click)="clearFilters()">
+        {{ i18n.t(ui.ref.clearFilters) }}
+      </button>
+    }
+  </div>
+
+  <div class="timeline" role="list">
+    @for (r of visible(); track r.version; let first = $first) {
+      <app-release-note
+        role="listitem"
+        [release]="r"
+        [filter]="filter()"
+        [open]="isOpen(releaseId(r), first)"
+        (toggled)="toggleOpen(releaseId(r), first)"
+      />
+    } @empty {
+      <div class="empty" role="listitem">
+        @if (filter().size) {
+          <p>{{ i18n.t(ui.ref.noReleasesMatch) }}</p>
+          <button type="button" class="clear" (click)="clearFilters()">
+            {{ i18n.t(ui.ref.clearFilters) }}
+          </button>
+        } @else {
+          <p>{{ i18n.t(ui.common.nothingYet) }}</p>
+        }
+      </div>
+    }
+  </div>
+</div>
+
+<app-cta-band [heading]="i18n.t(home.cta.title)" [desc]="i18n.t(home.cta.desc)" [topic]="p.id" />

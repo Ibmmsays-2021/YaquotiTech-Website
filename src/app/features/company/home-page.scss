@@ -1,0 +1,110 @@
+// Two services side by side, divided by a hairline — no boxes.
+.services {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+  border-block-start: 1px solid var(--border);
+}
+
+.service {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-block: 32px;
+  padding-inline: 0 clamp(24px, 4vw, 56px);
+  min-width: 0;
+
+  & + & {
+    padding-inline: clamp(24px, 4vw, 56px) 0;
+    border-inline-start: 1px solid var(--border);
+  }
+
+  h3 {
+    font-size: 1.375rem;
+  }
+
+  h3 a {
+    color: var(--text);
+  }
+
+  > p {
+    color: var(--text-body);
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-block: 8px 12px;
+  }
+
+  li {
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    color: var(--text-body);
+  }
+}
+
+.ico {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius);
+  background: var(--primary-50);
+  color: var(--primary-700);
+  margin-block-end: 8px;
+}
+
+.more {
+  margin-block-start: auto;
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.why {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 0;
+  margin: 0;
+  border-block-start: 1px solid var(--border);
+
+  > div {
+    padding: 28px 28px 28px 0;
+    padding-inline: 0 28px;
+    border-block-end: 1px solid var(--border);
+  }
+
+  dt {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    font-weight: 600;
+    color: var(--text);
+    font-size: 1.0625rem;
+
+    app-icon {
+      color: var(--primary-700);
+    }
+  }
+
+  dd {
+    margin: 8px 0 0;
+    color: var(--text-body);
+    font-size: 0.9375rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .service + .service {
+    padding-inline: 0;
+    border-inline-start: 0;
+    border-block-start: 1px solid var(--border);
+  }
+}
+
+// Reserved space for the deferred lower sections during in-app navigation (no layout shift).
+.below-fold-placeholder {
+  min-height: 1400px;
+}

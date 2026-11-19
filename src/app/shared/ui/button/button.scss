@@ -1,0 +1,73 @@
+// Shared button look. Applied to <a> and <button> via the appButton directive.
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.625rem 1.125rem;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  text-decoration: none !important;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+:host(.btn--sm) {
+  min-height: 38px;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.875rem;
+}
+
+:host(.btn--primary) {
+  background: var(--primary-600);
+  color: #fff;
+
+  &:hover {
+    background: var(--primary-700);
+    color: #fff;
+  }
+}
+
+:host(.btn--secondary) {
+  background: var(--surface);
+  border-color: var(--border-strong);
+  color: var(--text);
+
+  &:hover {
+    border-color: var(--navy-500);
+    color: var(--text);
+  }
+}
+
+:host(.btn--ghost) {
+  background: transparent;
+  color: var(--link);
+  padding-inline: 0.5rem;
+
+  &:hover {
+    color: var(--link-hover);
+    background: var(--primary-50);
+  }
+}
+
+:host(.btn--light) {
+  background: #fff;
+  color: var(--color-navy);
+
+  &:hover {
+    background: var(--primary-50);
+    color: var(--color-navy);
+  }
+}
+
+:host([disabled]),
+:host([aria-disabled='true']) {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
