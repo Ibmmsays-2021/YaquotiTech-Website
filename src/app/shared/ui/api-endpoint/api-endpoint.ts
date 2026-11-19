@@ -81,7 +81,6 @@ export const METHOD_TONE: Record<HttpMethod, BadgeTone> = {
       align-items: start;
       padding-block: 40px;
       border-block-start: 1px solid var(--border);
-      scroll-margin-top: calc(var(--header-h) + 24px);
     }
     .prose {
       display: grid;

@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Injectable, Injector, inject } from '@angular/core';
 import type { ContactIntent } from '../../content/ui';
+import { restoreFocusQuietly } from '../focus';
 import { I18n } from '../i18n';
 
 export interface ContactDialogOptions {
@@ -47,6 +48,7 @@ export class ContactDialogService {
   async open(options: ContactDialogOptions = {}): Promise<void> {
     if (this.isOpen || this.opening) return;
     this.opening = true;
+    const trigger = this.doc.activeElement;
     try {
       const [{ Dialog }, { GetInTouchDialog }] = await Promise.all([
         import('@angular/cdk/dialog'),
@@ -63,13 +65,14 @@ export class ContactDialogService {
         panelClass: 'git-panel',
         backdropClass: 'git-backdrop',
         autoFocus: finePointer ? '#git-name' : 'dialog',
-        restoreFocus: true,
+        restoreFocus: false,
         // A fixed width keeps CDK centring the panel; small screens get a full-screen sheet (base.scss).
         width: '600px',
         maxWidth: 'calc(100vw - 32px)',
       });
       this.isOpen = true;
       ref.closed.subscribe(() => (this.isOpen = false));
+      restoreFocusQuietly(trigger, ref.closed, this.doc);
     } finally {
       this.opening = false;
     }

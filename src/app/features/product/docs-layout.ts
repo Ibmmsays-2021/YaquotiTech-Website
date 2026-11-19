@@ -23,7 +23,7 @@ import { Toc, type TocItem } from '../../shared/ui/toc/toc';
   styles: `
     .layout {
       display: grid;
-      grid-template-columns: 240px minmax(0, 1fr) 200px;
+      grid-template-columns: 280px minmax(0, 1fr) 200px;
       gap: clamp(32px, 4vw, 56px);
       padding-block: 48px 112px;
       align-items: start;
@@ -50,7 +50,7 @@ import { Toc, type TocItem } from '../../shared/ui/toc/toc';
     }
     @media (max-width: 1180px) {
       .layout {
-        grid-template-columns: 220px minmax(0, 1fr);
+        grid-template-columns: 256px minmax(0, 1fr);
       }
       .layout.no-side {
         grid-template-columns: minmax(0, 1fr);
@@ -59,11 +59,12 @@ import { Toc, type TocItem } from '../../shared/ui/toc/toc';
         display: none;
       }
     }
-    /* The page is white; the sidebar keeps the tinted page colour as its own panel. */
+    /* The page is white; the sidebar is a light panel, a faint wash of the tint with a hairline edge. */
     app-docs-sidebar {
-      padding: 16px 10px;
+      padding: 14px 8px;
+      border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
       border-radius: var(--radius-lg);
-      background: var(--bg-tint);
+      background: color-mix(in srgb, var(--bg-tint) 40%, var(--surface));
     }
     @media (max-width: 960px) {
       .layout {

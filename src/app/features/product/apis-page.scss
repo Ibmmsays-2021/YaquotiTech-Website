@@ -101,11 +101,6 @@
   min-width: 0;
 }
 
-.block,
-.group-section {
-  scroll-margin-top: calc(var(--header-h) + 24px);
-}
-
 .block {
   display: grid;
   gap: 18px;

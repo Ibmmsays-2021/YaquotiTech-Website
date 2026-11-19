@@ -19,6 +19,7 @@ export const ui = {
     services: { en: 'Services', ar: 'الخدمات' },
     about: { en: 'About', ar: 'من نحن' },
     getInTouch: { en: 'Get in touch', ar: 'تواصل معنا' },
+    trySystem: { en: 'Try system', ar: 'جرّب النظام' },
     menu: { en: 'Menu', ar: 'القائمة' },
     close: { en: 'Close', ar: 'إغلاق' },
     language: { en: 'Language', ar: 'اللغة' },
@@ -26,6 +27,19 @@ export const ui = {
     skip: { en: 'Skip to content', ar: 'انتقل إلى المحتوى' },
     backToCompany: { en: 'Yaquoti Tech', ar: 'ياقوتي تك' },
     productMenu: { en: 'Product', ar: 'المنتج' },
+  },
+  search: {
+    button: { en: 'Search docs', ar: 'ابحث في التوثيق' },
+    placeholder: { en: 'Search the documentation…', ar: 'ابحث في التوثيق…' },
+    hint: {
+      en: 'Search the content of all {x} modules: headings, steps, tables and answers.',
+      ar: 'ابحث في محتوى جميع الوحدات ({x}): العناوين والخطوات والجداول والإجابات.',
+    },
+    none: { en: 'No results for “{x}”.', ar: 'لا توجد نتائج لـ «{x}».' },
+    count: { en: '{x} results', ar: '{x} نتيجة' },
+    results: { en: 'Search results', ar: 'نتائج البحث' },
+    move: { en: 'to move', ar: 'للتنقل' },
+    open: { en: 'to open', ar: 'للفتح' },
   },
   productNav: {
     home: { en: 'Home', ar: 'الرئيسية' },

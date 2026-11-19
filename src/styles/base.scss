@@ -8,6 +8,8 @@
 
 html {
   scroll-behavior: smooth;
+  // The one offset for anchor jumps (clears the sticky header). Don't add a scroll-margin of the
+  // same size on headings as well, or anchors land twice as low.
   scroll-padding-top: calc(var(--header-h) + 24px);
 }
 
@@ -197,5 +199,36 @@ ol[role='list'] {
     width: 100vw !important;
     height: 100dvh;
     max-height: 100dvh;
+  }
+
+  // The docs search is a full-screen sheet on phones.
+  .cdk-overlay-pane.search-panel {
+    max-width: 100vw !important;
+    width: 100vw !important;
+    margin-top: 0 !important;
+    top: 0 !important;
+  }
+}
+
+// A docs section reached from search flashes once, so the reader sees where they landed.
+.search-flash {
+  animation: search-flash 1.6s var(--ease);
+}
+
+@keyframes search-flash {
+  0%,
+  35% {
+    background: color-mix(in srgb, var(--color-primary) 16%, transparent);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--color-primary) 16%, transparent);
+  }
+  100% {
+    background: transparent;
+    box-shadow: 0 0 0 6px transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-flash {
+    animation: none;
   }
 }

@@ -29,7 +29,7 @@ const gettingStarted: Docs['gettingStarted'] = {
     'Add users, give them system roles and connect email and SMS (Users and permissions, System settings).',
     'Build the catalog: categories, sub categories and processes (Service catalog).',
     'Decide who takes part with groups, then design each step: approver, form, deadlines and rules (Process groups, Process steps).',
-    'Submit a test request and follow it to completion (Raise and follow requests, Approve and manage requests).',
+    'Submit a test request and follow it to completion (Raise and follow requests, Approve & manage requests).',
   ],
   ar: [],
 };

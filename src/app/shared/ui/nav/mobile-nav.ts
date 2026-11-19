@@ -9,6 +9,7 @@ import {
   RouterLinkActive,
 } from '@angular/router';
 import { filter } from 'rxjs';
+import { NAVIGATED } from '../../../core/focus';
 import { ContactDialogService } from '../../../core/contact/contact-dialog';
 import { I18n } from '../../../core/i18n';
 import { PRODUCT_CATALOG } from '../../../content/products/catalog';
@@ -118,6 +119,17 @@ export interface MobileNavData {
       </nav>
 
       <div class="foot">
+        @if (product) {
+          @if (product.tryUrl; as url) {
+            <a appButton="secondary" [href]="url" target="_blank" rel="noopener">{{
+              i18n.t(ui.nav.trySystem)
+            }}</a>
+          } @else {
+            <button type="button" appButton="secondary" (click)="trySystem()">
+              {{ i18n.t(ui.nav.trySystem) }}
+            </button>
+          }
+        }
         <button type="button" appButton="primary" (click)="getInTouch()">
           {{ i18n.t(ui.nav.getInTouch) }}
         </button>
@@ -249,11 +261,16 @@ export class MobileNav {
         filter((e) => e instanceof NavigationEnd || e instanceof NavigationSkipped),
         takeUntilDestroyed(),
       )
-      .subscribe(() => this.ref.close());
+      .subscribe(() => this.ref.close(NAVIGATED));
+  }
+
+  protected trySystem(): void {
+    this.ref.close(NAVIGATED);
+    if (this.product) this.contact.open({ topic: this.product.id, intent: 'demo' });
   }
 
   protected getInTouch(): void {
-    this.ref.close();
+    this.ref.close(NAVIGATED);
     this.contact.open(this.product ? { topic: this.product.id } : {});
   }
 }

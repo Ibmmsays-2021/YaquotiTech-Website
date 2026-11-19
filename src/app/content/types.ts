@@ -253,6 +253,8 @@ export interface ProductMeta {
   readonly summary: Text;
   /** Real logo; when missing, ProductLogo renders the Yaquoti mark + name as a wordmark. */
   readonly logo?: LogoAsset;
+  /** Where "Try system" sends visitors (a trial or sign-up URL); when missing, it opens a demo request. */
+  readonly tryUrl?: string;
 }
 
 /**

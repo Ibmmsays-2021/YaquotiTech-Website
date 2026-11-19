@@ -42,6 +42,8 @@ let uid = 0;
     </div>
   `,
   host: {
+    // The header draws the nav underline on the host, so it animates with the plain nav links.
+    '[class.is-active]': 'active()',
     '(mouseenter)': 'hover(true)',
     '(mouseleave)': 'hover(false)',
     '(focusout)': 'focusOut($event)',

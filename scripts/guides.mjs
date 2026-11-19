@@ -54,7 +54,7 @@ const GROUPS = [
     ],
   },
   {
-    label: 'Approve and manage requests',
+    label: 'Approve & manage requests',
     section: 'requests',
     icon: 'check',
     pages: [
