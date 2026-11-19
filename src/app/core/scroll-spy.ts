@@ -1,5 +1,13 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { DestroyRef, PLATFORM_ID, afterNextRender, effect, inject, signal, type Signal } from '@angular/core';
+import {
+  DestroyRef,
+  PLATFORM_ID,
+  afterNextRender,
+  effect,
+  inject,
+  signal,
+  type Signal,
+} from '@angular/core';
 
 /**
  * Tracks which of the given element ids is the section being read: the last one whose top has
@@ -29,10 +37,12 @@ export function scrollSpy(ids: () => readonly string[]): Signal<string> {
       active.set('');
       return;
     }
-    const header = parseFloat(win.getComputedStyle(doc.documentElement).getPropertyValue('--header-h')) || 0;
+    const header =
+      parseFloat(win.getComputedStyle(doc.documentElement).getPropertyValue('--header-h')) || 0;
     const line = header + 32;
     const scrolled = win.scrollY > 0;
-    const atBottom = scrolled && win.innerHeight + win.scrollY >= doc.documentElement.scrollHeight - 2;
+    const atBottom =
+      scrolled && win.innerHeight + win.scrollY >= doc.documentElement.scrollHeight - 2;
     let current = els[0];
     for (const el of els) if (el.getBoundingClientRect().top <= line) current = el;
     active.set(atBottom ? els[els.length - 1].id : current.id);

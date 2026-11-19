@@ -157,7 +157,10 @@ export const routes: Routes = [
   {
     matcher: (segments) => (segments[0]?.path === 'ar' ? { consumed: segments } : null),
     redirectTo: ({ url, fragment }) => {
-      const rest = url.slice(1).map((s) => s.path).join('/');
+      const rest = url
+        .slice(1)
+        .map((s) => s.path)
+        .join('/');
       return `/en${rest ? `/${rest}` : ''}${fragment ? `#${fragment}` : ''}`;
     },
   },

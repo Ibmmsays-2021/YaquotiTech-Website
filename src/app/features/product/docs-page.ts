@@ -325,7 +325,11 @@ export class DocsPage extends ProductPageBase {
       { label: this.i18n.t(p.name), link: this.link() },
       { label: this.i18n.t(this.ui.productNav.docs), link: this.link('docs') },
     ];
-    if (pg?.id) items.push({ label: this.i18n.t(m.title), link: this.link(`docs/${m.id}`) }, { label: pg.title });
+    if (pg?.id)
+      items.push(
+        { label: this.i18n.t(m.title), link: this.link(`docs/${m.id}`) },
+        { label: pg.title },
+      );
     else items.push({ label: this.i18n.t(m.title) });
     return items;
   });
@@ -356,7 +360,8 @@ export class DocsPage extends ProductPageBase {
   private readonly sequence = computed<(PagerLink & { key: string })[]>(() =>
     this.product().docs.modules.flatMap((m) => {
       const title = this.i18n.t(m.title);
-      if (!isGuideModule(m)) return [{ key: `${m.id}/`, label: title, link: this.link(`docs/${m.id}`) }];
+      if (!isGuideModule(m))
+        return [{ key: `${m.id}/`, label: title, link: this.link(`docs/${m.id}`) }];
       return m.guide.pages.map((pg) => ({
         key: `${m.id}/${pg.id}`,
         label: pg.id ? `${title}: ${pg.title}` : title,
