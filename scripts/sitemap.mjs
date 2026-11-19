@@ -79,10 +79,12 @@ const rules = redirects
           <action type="Redirect" url="${esc(to)}" appendQueryString="false" redirectType="Permanent" />
         </rule>`,
   )
-  .concat(`        <rule name="retired-arabic-site" stopProcessing="true">
+  .concat(
+    `        <rule name="retired-arabic-site" stopProcessing="true">
           <match url="^ar(/.*)?$" />
           <action type="Redirect" url="/en{R:1}" appendQueryString="true" redirectType="Permanent" />
-        </rule>`)
+        </rule>`,
+  )
   .join('\n');
 writeFileSync(
   join(browser, 'web.config'),

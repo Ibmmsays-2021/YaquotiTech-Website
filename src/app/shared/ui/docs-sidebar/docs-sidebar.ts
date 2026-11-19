@@ -316,11 +316,24 @@ export class DocsSidebar {
                 title: pg.title,
                 link: pg.id ? `${link}/${pg.id}` : link,
                 // One caption above the first how-to page groups the task pages together.
-                caption: pg.kind === 'tasks' && list[i - 1]?.kind !== 'tasks' ? 'How-to guides' : '',
+                caption:
+                  pg.kind === 'tasks' && list[i - 1]?.kind !== 'tasks' ? 'How-to guides' : '',
               }));
             const here = path === link || path.startsWith(`${link}/`);
-            const hit = !q || groupHit || title.toLowerCase().includes(q) || summary.toLowerCase().includes(q);
-            return { id: m.id, icon: m.icon, title, summary, pages, open: q ? pages.length > 0 : here, hit: hit || pages.length > 0 };
+            const hit =
+              !q ||
+              groupHit ||
+              title.toLowerCase().includes(q) ||
+              summary.toLowerCase().includes(q);
+            return {
+              id: m.id,
+              icon: m.icon,
+              title,
+              summary,
+              pages,
+              open: q ? pages.length > 0 : here,
+              hit: hit || pages.length > 0,
+            };
           })
           .filter((m) => m.hit),
       };

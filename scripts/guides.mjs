@@ -33,26 +33,65 @@ const out = join(root, 'src', 'app', 'content', 'products', 'workflow', 'guides.
  * isn't listed keep their words and lose the link.
  */
 const GROUPS = [
-  { label: 'Your workspace', section: 'requests', icon: 'compass', pages: ['home', 'notifications', 'announcements'] },
+  {
+    label: 'Your workspace',
+    section: 'requests',
+    icon: 'compass',
+    pages: ['home', 'notifications', 'announcements'],
+  },
   {
     label: 'Raise and follow requests',
     section: 'requests',
     icon: 'inbox',
-    pages: ['new-request-choose', 'new-request-submit', 'requests-list', 'request-details', 'request-history', 'conversations-and-activities', 'print-and-export'],
+    pages: [
+      'new-request-choose',
+      'new-request-submit',
+      'requests-list',
+      'request-details',
+      'request-history',
+      'conversations-and-activities',
+      'print-and-export',
+    ],
   },
   {
     label: 'Approve and manage requests',
     section: 'requests',
     icon: 'check',
-    pages: ['pick-up-and-assign', 'decide-on-a-step', 'hold-for-correction', 'cancel-and-reopen', 'sub-requests', 'dynamic-actions', 'request-sla', 'incidents', 'backup-approvals'],
+    pages: [
+      'pick-up-and-assign',
+      'decide-on-a-step',
+      'hold-for-correction',
+      'cancel-and-reopen',
+      'sub-requests',
+      'dynamic-actions',
+      'request-sla',
+      'incidents',
+      'backup-approvals',
+    ],
   },
-  { label: 'Customer portal', section: 'requests', icon: 'globe', pages: ['customer-portal-new-request', 'customer-portal-inquiry'] },
-  { label: 'Service catalog', section: 'process-design', icon: 'layers', pages: ['service-catalog', 'process-basic', 'process-lifecycle', 'process-templates'] },
+  {
+    label: 'Customer portal',
+    section: 'requests',
+    icon: 'globe',
+    pages: ['customer-portal-new-request', 'customer-portal-inquiry'],
+  },
+  {
+    label: 'Service catalog',
+    section: 'process-design',
+    icon: 'layers',
+    pages: ['service-catalog', 'process-basic', 'process-lifecycle', 'process-templates'],
+  },
   {
     label: 'Process groups',
     section: 'process-design',
     icon: 'users',
-    pages: ['user-groups', 'approval-groups', 'activity-groups', 'request-admin-groups', 'process-groups-tab'],
+    pages: [
+      'user-groups',
+      'approval-groups',
+      'activity-groups',
+      'request-admin-groups',
+      'process-groups-tab',
+    ],
   },
   {
     label: 'Process steps',
@@ -72,24 +111,72 @@ const GROUPS = [
       'step-logic-and-automation',
     ],
   },
-  { label: 'Activity center', section: 'process-design', icon: 'bell', pages: ['activity-templates', 'activity-logs'] },
-  { label: 'Developer space', section: 'process-design', icon: 'code', pages: ['integrations', 'vaults-keys-and-google-forms'] },
-  { label: 'Your account', section: 'administration', icon: 'key', pages: ['sign-in', 'sign-up', 'complete-your-data', 'profile-and-settings'] },
-  { label: 'Organization', section: 'administration', icon: 'briefcase', pages: ['organization-structure', 'organization-roles', 'working-time', 'vendors'] },
+  {
+    label: 'Activity center',
+    section: 'process-design',
+    icon: 'bell',
+    pages: ['activity-templates', 'activity-logs'],
+  },
+  {
+    label: 'Developer space',
+    section: 'process-design',
+    icon: 'code',
+    pages: ['integrations', 'vaults-keys-and-google-forms'],
+  },
+  {
+    label: 'Your account',
+    section: 'administration',
+    icon: 'key',
+    pages: ['sign-in', 'sign-up', 'complete-your-data', 'profile-and-settings'],
+  },
+  {
+    label: 'Organization',
+    section: 'administration',
+    icon: 'briefcase',
+    pages: ['organization-structure', 'organization-roles', 'working-time', 'vendors'],
+  },
   {
     label: 'Users and permissions',
     section: 'administration',
     icon: 'shield',
-    pages: ['users', 'import-users', 'additional-fields', 'system-roles', 'positions', 'active-directory'],
+    pages: [
+      'users',
+      'import-users',
+      'additional-fields',
+      'system-roles',
+      'positions',
+      'active-directory',
+    ],
   },
-  { label: 'Reports', section: 'administration', icon: 'chart', pages: ['report-builder', 'saved-and-scheduled-reports', 'built-in-reports'] },
-  { label: 'Knowledge base', section: 'administration', icon: 'book', pages: ['knowledge-base-articles', 'knowledge-base-management'] },
-  { label: 'System settings', section: 'administration', icon: 'sliders', pages: ['email-and-sms', 'localization', 'system-information'] },
+  {
+    label: 'Reports',
+    section: 'administration',
+    icon: 'chart',
+    pages: ['report-builder', 'saved-and-scheduled-reports', 'built-in-reports'],
+  },
+  {
+    label: 'Knowledge base',
+    section: 'administration',
+    icon: 'book',
+    pages: ['knowledge-base-articles', 'knowledge-base-management'],
+  },
+  {
+    label: 'System settings',
+    section: 'administration',
+    icon: 'sliders',
+    pages: ['email-and-sms', 'localization', 'system-information'],
+  },
 ];
 
 /** One entry per published page: an article is one page, not split by section. */
 const MODULES = GROUPS.flatMap((g) =>
-  g.pages.map((p) => ({ id: p, file: `${g.section}/${p}.md`, path: `${g.section}/${p}.md`, article: true, icon: g.icon })),
+  g.pages.map((p) => ({
+    id: p,
+    file: `${g.section}/${p}.md`,
+    path: `${g.section}/${p}.md`,
+    article: true,
+    icon: g.icon,
+  })),
 );
 const BY_PATH = new Map(MODULES.map((m) => [m.path, m]));
 const FAQ_HEADING = 'Frequently asked questions';
@@ -102,21 +189,41 @@ const KINDS = [
   ['overview', /^(overview|before you begin|getting around|related topics)$/],
   ['concepts', /^(key concepts|statuses and (workflow|lifecycle))$/],
   ['tasks', /^tasks\b/],
-  ['reference', /^(field reference|roles and permissions|notifications( and messages)?|what triggers a notification)$/],
+  [
+    'reference',
+    /^(field reference|roles and permissions|notifications( and messages)?|what triggers a notification)$/,
+  ],
   ['help', /^(tips and best practices|troubleshooting|frequently asked questions)$/],
 ];
 
 /** Page ids, titles and one-line descriptions for the non-task pages. Order = page order. */
 const PAGE_INFO = {
-  overview: { id: '', title: 'Overview', summary: 'What the module does, what you need first, and how to find your way around.' },
-  concepts: { id: 'concepts', title: 'Key concepts', summary: 'The terms, statuses and lifecycle you meet in this module.' },
-  reference: { id: 'reference', title: 'Reference', summary: 'Every field, permission and notification, with its rules.' },
-  help: { id: 'troubleshooting', title: 'Troubleshooting and FAQ', summary: 'Best practices, error messages and their fixes, and common questions.' },
+  overview: {
+    id: '',
+    title: 'Overview',
+    summary: 'What the module does, what you need first, and how to find your way around.',
+  },
+  concepts: {
+    id: 'concepts',
+    title: 'Key concepts',
+    summary: 'The terms, statuses and lifecycle you meet in this module.',
+  },
+  reference: {
+    id: 'reference',
+    title: 'Reference',
+    summary: 'Every field, permission and notification, with its rules.',
+  },
+  help: {
+    id: 'troubleshooting',
+    title: 'Troubleshooting and FAQ',
+    summary: 'Best practices, error messages and their fixes, and common questions.',
+  },
 };
 
 // ---------- helpers ----------
 
-const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const esc = (s) =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 /** GitHub-style heading anchor, which is what the guides' own "#links" were written against. */
 const slugify = (text) =>
@@ -217,8 +324,11 @@ function heading(level, raw, ctx) {
 
 function table(rows, ctx) {
   const [head, ...body] = rows.map(cells);
-  const td = (c, tag) => `<${tag}${tag === 'th' ? ' scope="col"' : ''}>${inline(c, ctx) || '—'}</${tag}>`;
-  const thead = head.some((c) => plain(c)) ? `<thead><tr>${head.map((c) => td(c, 'th')).join('')}</tr></thead>` : '';
+  const td = (c, tag) =>
+    `<${tag}${tag === 'th' ? ' scope="col"' : ''}>${inline(c, ctx) || '—'}</${tag}>`;
+  const thead = head.some((c) => plain(c))
+    ? `<thead><tr>${head.map((c) => td(c, 'th')).join('')}</tr></thead>`
+    : '';
   const tbody = body.map((r) => `<tr>${r.map((c) => td(c, 'td')).join('')}</tr>`).join('');
   return `<div class="table-wrap" tabindex="0" role="region" aria-label="Table"><table>${thead}<tbody>${tbody}</tbody></table></div>`;
 }
@@ -226,14 +336,16 @@ function table(rows, ctx) {
 function callout(lines, ctx) {
   // Help-article notes: "> 📷 Screenshot needed: …", "> ℹ️ **…**", "> ⚠️ **…**".
   const first = lines[0]?.trim() ?? '';
-  const shot = /^📷\s*Screenshot needed:\s*(.+)$/.exec([first, ...lines.slice(1).map((l) => l.trim())].join(' ').trim());
+  const shot = /^📷\s*Screenshot needed:\s*(.+)$/.exec(
+    [first, ...lines.slice(1).map((l) => l.trim())].join(' ').trim(),
+  );
   if (shot) {
     const text = plain(shot[1]);
     return `<figure class="shot" role="img" aria-label="${esc(text)}"><span class="shot-label">Screenshot</span><figcaption>${inline(shot[1], ctx)}</figcaption></figure>`;
   }
   const emoji = /^(ℹ️|⚠️|💡)\s*/.exec(first);
   if (emoji) {
-    const kind = { 'ℹ️': 'note', '⚠️': 'important', '💡': 'tip' }[emoji[1]];
+    const kind = { ℹ️: 'note', '⚠️': 'important', '💡': 'tip' }[emoji[1]];
     const rest = [first.slice(emoji[0].length), ...lines.slice(1)];
     return `<div class="callout callout-${kind}">${blocks(rest, ctx)}</div>`;
   }
@@ -261,7 +373,9 @@ function list(lines, ctx) {
     if (single) html = single[1];
     return ordered ? `<li><div>${html}</div></li>` : `<li>${html}</li>`;
   });
-  return ordered ? `<ol class="num-list">${li.join('')}</ol>` : `<ul class="bullets">${li.join('')}</ul>`;
+  return ordered
+    ? `<ol class="num-list">${li.join('')}</ol>`
+    : `<ul class="bullets">${li.join('')}</ul>`;
 }
 
 /** Lead-ins that the guides use for a task's outcome and its preconditions. */
@@ -279,7 +393,9 @@ function blocks(lines, ctx) {
     para = [];
     const shot = /^\[Screenshot:\s*(.+)\]$/.exec(text);
     if (shot) {
-      html.push(`<figure class="shot" role="img" aria-label="${esc(shot[1])}"><span class="shot-label">Screenshot</span><figcaption>${inline(shot[1], ctx)}</figcaption></figure>`);
+      html.push(
+        `<figure class="shot" role="img" aria-label="${esc(shot[1])}"><span class="shot-label">Screenshot</span><figcaption>${inline(shot[1], ctx)}</figcaption></figure>`,
+      );
     } else if (stripReview(text)) {
       const cls = PARA_CLASS.find(([re]) => re.test(text))?.[1];
       html.push(`<p${cls ? ` class="${cls}"` : ''}>${inline(text, ctx)}</p>`);
@@ -288,7 +404,10 @@ function blocks(lines, ctx) {
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    if (!line.trim()) { flush(); continue; }
+    if (!line.trim()) {
+      flush();
+      continue;
+    }
     if (/^<!--.*-->\s*$/.test(line.trim())) continue;
     if (/^\s*```/.test(line)) {
       flush();
@@ -300,8 +419,15 @@ function blocks(lines, ctx) {
       continue;
     }
     const h = /^(#{1,4})\s+(.*)$/.exec(line);
-    if (h) { flush(); html.push(heading(h[1].length, h[2], ctx)); continue; }
-    if (/^\s*(-{3,}|\*{3,})\s*$/.test(line)) { flush(); continue; }
+    if (h) {
+      flush();
+      html.push(heading(h[1].length, h[2], ctx));
+      continue;
+    }
+    if (/^\s*(-{3,}|\*{3,})\s*$/.test(line)) {
+      flush();
+      continue;
+    }
     if (line.trim().startsWith('|') && isTableSep(lines[i + 1])) {
       flush();
       const rows = [line];
@@ -332,8 +458,10 @@ function blocks(lines, ctx) {
           // A blank line ends the list unless the item carries on (indented) after it.
           let j = i + 1;
           while (j < lines.length && !lines[j].trim()) j++;
-          if (j < lines.length && /^\s{2,}\S/.test(lines[j])) { i = j - 1; items.push(''); }
-          else break;
+          if (j < lines.length && /^\s{2,}\S/.test(lines[j])) {
+            i = j - 1;
+            items.push('');
+          } else break;
         } else break;
       }
       html.push(list(items, ctx));
@@ -375,7 +503,11 @@ function glossaryLines(md) {
       keep.push(line);
       continue;
     }
-    if (inByModule && /^###\s/.test(line)) { flushBlock(); block.push(line); continue; }
+    if (inByModule && /^###\s/.test(line)) {
+      flushBlock();
+      block.push(line);
+      continue;
+    }
     if (inByModule && /^\s*-\s+\[/.test(line)) continue; // the module index; the page TOC replaces it
     (inByModule && block.length ? block : keep).push(line);
   }
@@ -393,7 +525,14 @@ function renderModule(mod) {
     used.set(base, n + 1);
     return n ? `${base}-${n}` : base;
   };
-  const newCtx = (shift = 0, path = mod.path) => ({ id: mod.id, path, shift, toc: [], anchors: [], uniqueId });
+  const newCtx = (shift = 0, path = mod.path) => ({
+    id: mod.id,
+    path,
+    shift,
+    toc: [],
+    anchors: [],
+    uniqueId,
+  });
 
   const [pre, ...secs] = splitAt(lines, 2);
 
@@ -422,10 +561,19 @@ function renderModule(mod) {
   // The glossary is looked up, not read through, and a help article is short: each is one page.
   if (mod.glossary || mod.article) {
     const ctx = newCtx();
-    const html = [blocks(intro, ctx), ...secs.map((s) => blocks(s.lines, ctx))].filter(Boolean).join('\n');
+    const html = [blocks(intro, ctx), ...secs.map((s) => blocks(s.lines, ctx))]
+      .filter(Boolean)
+      .join('\n');
     const kind = mod.glossary ? 'glossary' : 'tasks';
-    const items = ctx.toc.filter((t) => t.level === 2 && !/^related topics$/i.test(t.label)).map((t) => t.label);
-    return { id: mod.id, title, summary, pages: [{ id: '', kind, title, summary, items, toc: ctx.toc, anchors: ctx.anchors, html }] };
+    const items = ctx.toc
+      .filter((t) => t.level === 2 && !/^related topics$/i.test(t.label))
+      .map((t) => t.label);
+    return {
+      id: mod.id,
+      title,
+      summary,
+      pages: [{ id: '', kind, title, summary, items, toc: ctx.toc, anchors: ctx.anchors, html }],
+    };
   }
 
   /** One page from whole `## ` sections, in document order. */
@@ -463,13 +611,16 @@ function renderModule(mod) {
     const parts = [];
     const lead = blocks(introLines, ctx);
     if (lead) parts.push(`<div class="page-intro">${lead}</div>`);
-    for (const t of tasks) parts.push(`<section class="task">\n${blocks(t.lines, ctx)}\n</section>`);
+    for (const t of tasks)
+      parts.push(`<section class="task">\n${blocks(t.lines, ctx)}\n</section>`);
     const items = ctx.toc.filter((t) => t.level === 2).map((t) => t.label);
     return {
       id: slugify(pageTitle).replace(/-+/g, '-'),
       kind: 'tasks',
       title: pageTitle,
-      summary: items.length ? `${items.length} task${items.length > 1 ? 's' : ''}: ${items.slice(0, 3).join(', ')}${items.length > 3 ? '…' : '.'}` : '',
+      summary: items.length
+        ? `${items.length} task${items.length > 1 ? 's' : ''}: ${items.slice(0, 3).join(', ')}${items.length > 3 ? '…' : '.'}`
+        : '',
       items,
       toc: ctx.toc,
       anchors: ctx.anchors,
@@ -498,9 +649,17 @@ function renderModule(mod) {
           byTitle.delete(name);
           return t;
         });
-        taskPages.push(taskPage(g.title, taskPages.length ? [] : intro.lines, picked, taskPages.length ? [] : [sectionId]));
+        taskPages.push(
+          taskPage(
+            g.title,
+            taskPages.length ? [] : intro.lines,
+            picked,
+            taskPages.length ? [] : [sectionId],
+          ),
+        );
       }
-      if (byTitle.size) throw new Error(`${mod.id}: tasks not in any group: ${[...byTitle.keys()].join(', ')}`);
+      if (byTitle.size)
+        throw new Error(`${mod.id}: tasks not in any group: ${[...byTitle.keys()].join(', ')}`);
     } else {
       taskPages.push(taskPage(taskGroupTitle(s.title), intro.lines, tasks, [sectionId]));
     }
@@ -537,7 +696,10 @@ function resolveAnchors(guides) {
     for (const p of g.pages) {
       p.html = p.html.replace(/href="__DOCS__\/([a-z0-9-]+)(?:#([^"]*))?"/g, (_, mod, frag) => {
         const target = guides.find((x) => x.id === mod);
-        if (!target) { broken++; return `href="${DOCS}/${mod}"`; }
+        if (!target) {
+          broken++;
+          return `href="${DOCS}/${mod}"`;
+        }
         if (!frag) return `href="${DOCS}/${mod}"`;
         const page = where.get(`${mod}#${frag}`);
         if (page === undefined) {
@@ -558,9 +720,15 @@ function resolveAnchors(guides) {
 
 const guides = MODULES.map(renderModule);
 const broken = resolveAnchors(guides);
-for (const g of guides) for (const p of g.pages) { delete p.anchors; delete p.sectionIds; }
+for (const g of guides)
+  for (const p of g.pages) {
+    delete p.anchors;
+    delete p.sectionIds;
+  }
 
-const body = guides.map((g) => `  ${JSON.stringify(g.id)}: ${JSON.stringify(g, null, 2).replace(/\n/g, '\n  ')},`).join('\n');
+const body = guides
+  .map((g) => `  ${JSON.stringify(g.id)}: ${JSON.stringify(g, null, 2).replace(/\n/g, '\n  ')},`)
+  .join('\n');
 writeFileSync(
   out,
   `// Generated by scripts/guides.mjs from docs-src/workflow. Do not edit: change the Markdown and run the script.\n` +

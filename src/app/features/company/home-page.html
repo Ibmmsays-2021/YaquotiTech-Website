@@ -1,8 +1,4 @@
-<app-hero
-  size="display"
-  [heading]="i18n.t(home.title)"
-  [lead]="i18n.t(home.lead)"
->
+<app-hero size="display" [heading]="i18n.t(home.title)" [lead]="i18n.t(home.lead)">
   <ng-container ngProjectAs="[heroAction]">
     <a appButton="primary" [routerLink]="i18n.link('products')">{{
       i18n.t(ui.common.exploreProducts)

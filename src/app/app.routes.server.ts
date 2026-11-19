@@ -21,11 +21,13 @@ const moduleParams = () =>
 /** The sub-pages of every user guide (its landing page is the module route above). */
 const guidePageParams = () =>
   PRODUCTS.flatMap((p) =>
-    p.docs.modules.filter(isGuideModule).flatMap((m) =>
-      m.guide.pages
-        .filter((pg) => pg.id)
-        .map((pg) => ({ productId: p.id, moduleId: m.id, pageId: pg.id })),
-    ),
+    p.docs.modules
+      .filter(isGuideModule)
+      .flatMap((m) =>
+        m.guide.pages
+          .filter((pg) => pg.id)
+          .map((pg) => ({ productId: p.id, moduleId: m.id, pageId: pg.id })),
+      ),
   );
 const modulesOf = (id: string) => () =>
   (productById(id)?.docs.modules ?? []).map((m) => ({ moduleId: m.id }));
