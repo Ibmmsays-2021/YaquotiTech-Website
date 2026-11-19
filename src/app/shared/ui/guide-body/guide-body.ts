@@ -23,7 +23,10 @@ import type { GuidePage } from '../../../content/types';
   selector: 'app-guide-body',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  template: `<div class="guide" lang="en" dir="ltr" [innerHTML]="html()" (click)="follow($event)"></div>`,
+  // Anchors arrive via innerHTML and are focusable on their own; Enter on a link fires click, which
+  // bubbles here, so a host listener covers mouse and keyboard.
+  host: { '(click)': 'follow($event)' },
+  template: `<div class="guide" lang="en" dir="ltr" [innerHTML]="html()"></div>`,
   styles: `
     .guide {
       color: var(--text-body);
@@ -286,12 +289,21 @@ export class GuideBody {
   readonly docsRoot = input.required<string>();
 
   protected readonly html = computed(() =>
-    this.sanitizer.bypassSecurityTrustHtml(this.guide().html.replaceAll('__DOCS__', this.docsRoot())),
+    this.sanitizer.bypassSecurityTrustHtml(
+      this.guide().html.replaceAll('__DOCS__', this.docsRoot()),
+    ),
   );
 
   /** Links in the guide are plain anchors; keep in-site ones inside the app instead of reloading. */
   protected follow(event: MouseEvent): void {
-    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey) return;
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey
+    )
+      return;
     const a = (event.target as HTMLElement).closest('a');
     const href = a?.getAttribute('href');
     if (!href?.startsWith('/') || a?.target === '_blank') return;
