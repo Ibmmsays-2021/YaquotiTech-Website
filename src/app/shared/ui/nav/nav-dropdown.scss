@@ -17,16 +17,11 @@
   font-size: 0.9375rem;
   cursor: pointer;
 
+  // The underline itself is drawn by the header (header.scss) on this component's host.
   &:hover,
-  &[aria-expanded='true'] {
-    color: var(--text);
-    background: var(--navy-100);
-  }
-
+  &[aria-expanded='true'],
   &.active {
     color: var(--text);
-    box-shadow: inset 0 -2px 0 var(--color-primary);
-    border-radius: 0;
   }
 }
 

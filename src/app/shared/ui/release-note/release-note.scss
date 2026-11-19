@@ -5,7 +5,8 @@
   grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
   gap: clamp(24px, 4vw, 48px);
   padding-block-end: 40px;
-  scroll-margin-top: calc(var(--header-h) + 96px);
+  // Added to the page-wide scroll-padding (header + 24px in base.scss).
+  scroll-margin-top: 72px;
 }
 
 // spine

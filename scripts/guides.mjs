@@ -41,7 +41,7 @@ const GROUPS = [
     pages: ['new-request-choose', 'new-request-submit', 'requests-list', 'request-details', 'request-history', 'conversations-and-activities', 'print-and-export'],
   },
   {
-    label: 'Approve and manage requests',
+    label: 'Approve & manage requests',
     section: 'requests',
     icon: 'check',
     pages: ['pick-up-and-assign', 'decide-on-a-step', 'hold-for-correction', 'cancel-and-reopen', 'sub-requests', 'dynamic-actions', 'request-sla', 'incidents', 'backup-approvals'],

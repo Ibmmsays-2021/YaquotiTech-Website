@@ -69,13 +69,11 @@ import type { GuidePage } from '../../../content/types';
       padding-block-start: 28px;
       border-block-start: 1px solid var(--border);
       font-size: 1.3125rem;
-      scroll-margin-top: calc(var(--header-h) + 24px);
     }
     .guide h3 {
       margin-block: 32px 12px;
       font-size: 1.0625rem;
       color: var(--text);
-      scroll-margin-top: calc(var(--header-h) + 24px);
     }
     .guide h4 {
       margin-block: 20px 8px;

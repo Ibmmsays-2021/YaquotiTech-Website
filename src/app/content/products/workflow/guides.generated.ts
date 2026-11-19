@@ -2962,7 +2962,7 @@ export const GUIDE_GROUPS: readonly { readonly label: string; readonly icon: Ico
     ]
   },
   {
-    "label": "Approve and manage requests",
+    "label": "Approve & manage requests",
     "icon": "check",
     "ids": [
       "pick-up-and-assign",

@@ -5,6 +5,7 @@ import {
   computed,
   inject,
   input,
+  linkedSignal,
   signal,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
@@ -48,59 +49,100 @@ let uid = 0;
       </div>
       <nav [attr.aria-label]="i18n.t(ui.productNav.docs)">
         <a
-          class="link"
+          class="link tree-top"
           [routerLink]="base()"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
           ariaCurrentWhenActive="page"
-          ><app-icon name="book" [size]="16" />{{ i18n.t(ui.common.gettingStarted) }}</a
+          ><app-icon name="book" [size]="16" /><span>{{
+            i18n.t(ui.common.gettingStarted)
+          }}</span></a
         >
-        @for (g of groups(); track $index) {
-          @if (g.items.length) {
-            <p class="group">{{ g.label }}</p>
-            @for (m of g.items; track m.id) {
-              @if (m.pages.length) {
-                <!-- A guide: the module heads its own page tree, open while you are in it. -->
-                <a
-                  class="link"
-                  [class.current]="m.open"
-                  [routerLink]="base() + '/' + m.id"
-                  [attr.aria-expanded]="m.open"
-                  ><app-icon [name]="m.icon" [size]="16" />{{ m.title }}
-                  <app-icon class="chev" [class.open]="m.open" name="chevron" [size]="14"
-                /></a>
-                @if (m.open) {
-                  <ul class="pages" role="list">
-                    @for (pg of m.pages; track pg.link) {
-                      @if (pg.caption) {
-                        <li class="caption">{{ pg.caption }}</li>
-                      }
+        <ul class="tree" role="list">
+          @for (g of groups(); track g.key) {
+            @if (g.items.length) {
+              <li>
+                <!-- Level 1: a group, a branch that opens and closes. -->
+                <button
+                  type="button"
+                  class="group"
+                  [attr.aria-expanded]="g.open"
+                  [attr.aria-controls]="filterId + '-' + g.key"
+                  (click)="toggle(g.key, g.open)"
+                >
+                  <app-icon class="g-ico" [name]="g.icon" [size]="16" />
+                  <span>{{ g.label }}</span>
+                  <app-icon class="chev" [class.open]="g.open" name="chevron" [size]="14" />
+                </button>
+                @if (g.open) {
+                  <!-- Level 2: the group's modules. -->
+                  <ul class="modules" role="list" [id]="filterId + '-' + g.key">
+                    @for (m of g.items; track m.id) {
                       <li>
-                        <a
-                          class="page"
-                          [class.task]="pg.kind === 'tasks'"
-                          [routerLink]="pg.link"
-                          routerLinkActive="active"
-                          [routerLinkActiveOptions]="{ exact: true }"
-                          ariaCurrentWhenActive="page"
-                          >{{ pg.title }}</a
-                        >
+                        @if (m.pages.length) {
+                          <!-- A guide: the module heads its own page tree (level 3). -->
+                          <div class="row">
+                            <a
+                              class="link"
+                              [class.current]="m.here"
+                              [routerLink]="base() + '/' + m.id"
+                              routerLinkActive="active"
+                              [routerLinkActiveOptions]="{ exact: true }"
+                              ariaCurrentWhenActive="page"
+                              ><span>{{ m.title }}</span></a
+                            >
+                            <button
+                              type="button"
+                              class="expand"
+                              [attr.aria-expanded]="m.open"
+                              [attr.aria-label]="m.title"
+                              (click)="toggle('m:' + m.id, m.open)"
+                            >
+                              <app-icon
+                                class="chev"
+                                [class.open]="m.open"
+                                name="chevron"
+                                [size]="14"
+                              />
+                            </button>
+                          </div>
+                          @if (m.open) {
+                            <ul class="pages" role="list">
+                              @for (pg of m.pages; track pg.link) {
+                                @if (pg.caption) {
+                                  <li class="caption">{{ pg.caption }}</li>
+                                }
+                                <li>
+                                  <a
+                                    class="page"
+                                    [class.task]="pg.kind === 'tasks'"
+                                    [routerLink]="pg.link"
+                                    routerLinkActive="active"
+                                    [routerLinkActiveOptions]="{ exact: true }"
+                                    ariaCurrentWhenActive="page"
+                                    >{{ pg.title }}</a
+                                  >
+                                </li>
+                              }
+                            </ul>
+                          }
+                        } @else {
+                          <a
+                            class="link"
+                            [routerLink]="base() + '/' + m.id"
+                            routerLinkActive="active"
+                            ariaCurrentWhenActive="page"
+                            ><span>{{ m.title }}</span></a
+                          >
+                        }
                       </li>
                     }
                   </ul>
                 }
-              } @else {
-                <a
-                  class="link"
-                  [routerLink]="base() + '/' + m.id"
-                  routerLinkActive="active"
-                  ariaCurrentWhenActive="page"
-                  ><app-icon [name]="m.icon" [size]="16" />{{ m.title }}</a
-                >
-              }
+              </li>
             }
           }
-        }
+        </ul>
         @if (query() && !anyMatch()) {
           <p class="none" role="status">{{ i18n.t(ui.common.noMatches) }}</p>
         }
@@ -143,54 +185,145 @@ let uid = 0;
       color: var(--text);
       outline: none;
     }
-    .group {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin: 20px 10px 6px;
+    /*
+     * One rhythm for every row: a 16px icon, an 8px gap, then the text. Icons and arrows sit on the
+     * first line of a label, so long labels wrap under their own text, never under the icon.
+     * Sub-items hang on a tree line under the group icon and start where the group label starts.
+     */
+    :host {
+      --row-pad: 10px;
+      --row-ico: 16px;
+      --row-gap: 8px;
+      --row-lh: 1.4;
     }
+    .tree,
+    .modules {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .tree {
+      display: grid;
+      gap: 1px;
+      margin-block-start: 8px;
+    }
+    .group,
     .link {
       display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 7px 10px;
+      align-items: flex-start;
+      gap: var(--row-gap);
+      width: 100%;
+      padding: 6px var(--row-pad);
+      border: 0;
       border-radius: var(--radius-sm);
-      color: var(--text-body);
-      font-size: 0.84375rem;
-      font-weight: 500;
+      background: transparent;
+      font: inherit;
+      font-size: 0.8125rem;
+      line-height: var(--row-lh);
+      text-align: start;
       text-decoration: none;
     }
-    .link app-icon {
+    .group > span,
+    .link > span {
+      flex: 1;
+      min-width: 0;
+      overflow-wrap: anywhere;
+      text-wrap: pretty;
+    }
+    /* Centre each icon on the first line of text. */
+    .group > app-icon,
+    .link > app-icon {
+      flex: none;
+      margin-block-start: calc((var(--row-lh) * 1em - var(--row-ico)) / 2);
       color: var(--text-muted);
     }
+    .group > .chev {
+      margin-block-start: calc((var(--row-lh) * 1em - 14px) / 2);
+    }
+
+    /* Level 1: groups (and Getting started). */
+    .group,
+    .tree-top {
+      color: var(--text-body);
+      font-weight: 500;
+    }
+    .group {
+      cursor: pointer;
+    }
+    .group:hover,
     .link:hover {
       background: var(--navy-100);
       color: var(--text);
     }
-    .link.active {
-      background: var(--primary-100);
-      color: var(--primary-800);
-      font-weight: 600;
+    .group[aria-expanded='true'] {
+      color: var(--text);
     }
-    .link.active app-icon {
+    .group[aria-expanded='true'] .g-ico {
       color: var(--primary-700);
     }
 
-    /* A guide's page tree. */
-    .link.current {
-      color: var(--text);
-      font-weight: 600;
+    /* Level 2: a group's modules, on a tree line under the group icon. */
+    .modules {
+      display: grid;
+      gap: 1px;
+      margin: 1px 0 6px;
+      margin-inline-start: calc(var(--row-pad) + var(--row-ico) / 2);
+      padding-inline-start: calc(var(--row-ico) / 2 + var(--row-gap) - var(--row-pad) - 1px);
+      border-inline-start: 1px solid var(--border);
     }
-    .link.current app-icon {
+    .modules .link {
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+    .link.active,
+    .modules .link.active {
+      background: color-mix(in srgb, var(--color-primary) 10%, var(--surface));
+      color: var(--primary-800);
+      font-weight: 500;
+    }
+    .link.active > app-icon {
       color: var(--primary-700);
     }
-    /* The chevron icon points down: turned to the reading direction while the guide is closed. */
+    .link.current {
+      color: var(--text);
+    }
+    .row {
+      display: flex;
+      align-items: flex-start;
+      gap: 2px;
+    }
+    .row .link {
+      flex: 1;
+      min-width: 0;
+    }
+    .expand {
+      display: grid;
+      place-items: center;
+      flex: none;
+      width: 26px;
+      height: 26px;
+      margin-block-start: 3px;
+      border: 0;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .expand:hover {
+      background: var(--navy-100);
+      color: var(--text);
+    }
+    /* The chevron icon points down: turned to the reading direction while closed. */
     .chev {
-      margin-inline-start: auto;
+      flex: none;
       transform: rotate(-90deg);
       transition: transform var(--dur) var(--ease);
     }
-    .chev.open {
+    :host-context([dir='rtl']) .chev {
+      transform: rotate(90deg);
+    }
+    .chev.open,
+    :host-context([dir='rtl']) .chev.open {
       transform: none;
     }
     .pages {
@@ -214,8 +347,10 @@ let uid = 0;
       display: block;
       padding: 5px 10px;
       border-radius: var(--radius-sm);
-      color: var(--text-body);
+      color: var(--text-muted);
       font-size: 0.8125rem;
+      line-height: var(--row-lh);
+      overflow-wrap: anywhere;
       text-decoration: none;
     }
     .page.task {
@@ -226,9 +361,9 @@ let uid = 0;
       color: var(--text);
     }
     .page.active {
-      background: var(--primary-100);
+      background: color-mix(in srgb, var(--color-primary) 10%, var(--surface));
       color: var(--primary-800);
-      font-weight: 600;
+      font-weight: 500;
     }
     .none {
       padding: 10px;
@@ -284,46 +419,68 @@ export class DocsSidebar {
     { initialValue: this.router.url.split(/[?#]/)[0] },
   );
 
+  /**
+   * Branches opened or closed by hand, by key ('g:<index>' for a group, 'm:<id>' for a guide).
+   * Opened branches stay open while browsing; closed ones fall back to the default on the next page,
+   * so the branch you navigate into always shows.
+   */
+  private readonly overrides = linkedSignal<string, Record<string, boolean>>({
+    source: this.path,
+    computation: (_path, prev) =>
+      Object.fromEntries(Object.entries(prev?.value ?? {}).filter(([, open]) => open)),
+  });
+
+  protected toggle(key: string, open: boolean): void {
+    this.overrides.update((o) => ({ ...o, [key]: !open }));
+  }
+
   protected readonly groups = computed(() => {
     const p = this.product();
     const q = this.query().trim().toLowerCase();
     const path = this.path();
+    const overrides = this.overrides();
     const byId = new Map(p.docs.modules.map((m) => [m.id, m]));
-    // Search covers group names, module titles and summaries, and a guide's page titles and tasks
-    // (a group match keeps all its modules; a page match opens its guide on the matching pages).
-    return p.docs.groups.map((g) => {
+    // The filter matches names only: group names, module titles and a guide's page titles (a group
+    // match keeps all its modules; a page match opens its guide on the matching pages). Searching
+    // the docs' content is the header's search dialog.
+    return p.docs.groups.map((g, gi) => {
+      const key = `g:${gi}`;
       const label = this.i18n.t(g.label);
       const groupHit = !!q && label.toLowerCase().includes(q);
-      return {
-        label,
-        items: g.modules
-          .map((id) => byId.get(id))
-          .filter((m) => !!m)
-          .map((m) => {
-            const link = `${this.base()}/${m.id}`;
-            const title = this.i18n.t(m.title);
-            const summary = this.i18n.t(m.summary);
-            const allPages = isGuideModule(m) && m.guide.pages.length > 1 ? m.guide.pages : [];
-            const pages = allPages
-              .filter(
-                (pg) =>
-                  !q ||
-                  pg.title.toLowerCase().includes(q) ||
-                  pg.items.some((t) => t.toLowerCase().includes(q)),
-              )
-              .map((pg, i, list) => ({
-                kind: pg.kind,
-                title: pg.title,
-                link: pg.id ? `${link}/${pg.id}` : link,
-                // One caption above the first how-to page groups the task pages together.
-                caption: pg.kind === 'tasks' && list[i - 1]?.kind !== 'tasks' ? 'How-to guides' : '',
-              }));
-            const here = path === link || path.startsWith(`${link}/`);
-            const hit = !q || groupHit || title.toLowerCase().includes(q) || summary.toLowerCase().includes(q);
-            return { id: m.id, icon: m.icon, title, summary, pages, open: q ? pages.length > 0 : here, hit: hit || pages.length > 0 };
-          })
-          .filter((m) => m.hit),
-      };
+      const items = g.modules
+        .map((id) => byId.get(id))
+        .filter((m) => !!m)
+        .map((m) => {
+          const link = `${this.base()}/${m.id}`;
+          const title = this.i18n.t(m.title);
+          const allPages = isGuideModule(m) && m.guide.pages.length > 1 ? m.guide.pages : [];
+          const pages = allPages
+            .filter((pg) => !q || pg.title.toLowerCase().includes(q))
+            .map((pg, i, list) => ({
+              kind: pg.kind,
+              title: pg.title,
+              link: pg.id ? `${link}/${pg.id}` : link,
+              // One caption above the first how-to page groups the task pages together.
+              caption: pg.kind === 'tasks' && list[i - 1]?.kind !== 'tasks' ? 'How-to guides' : '',
+            }));
+          const here = path === link || path.startsWith(`${link}/`);
+          const hit = !q || groupHit || title.toLowerCase().includes(q);
+          const open = q ? pages.length > 0 : (overrides[`m:${m.id}`] ?? here);
+          return {
+            id: m.id,
+            icon: m.icon,
+            title,
+            pages,
+            here,
+            open,
+            hit: hit || pages.length > 0,
+          };
+        })
+        .filter((m) => m.hit);
+      // While filtering, every group with a match is open; otherwise the group you are in opens by default.
+      const here = items.some((m) => m.here);
+      const icon = byId.get(g.modules[0])?.icon ?? 'book';
+      return { key, label, icon, items, open: !!q || (overrides[key] ?? here) };
     });
   });
 
