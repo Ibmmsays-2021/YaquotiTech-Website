@@ -1,10 +1,11 @@
 name: CI/CD
 
+# Flow: feature branch → PR into develop → PR develop into main (release) → deploy.
 on:
   pull_request:
-    branches: [main]
+    branches: [develop, main]
   push:
-    branches: [main]
+    branches: [develop, main]
   workflow_dispatch:
 
 permissions:
@@ -15,6 +16,22 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  release-source:
+    name: Release source
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Only develop or hotfix/* may merge into main
+        env:
+          BASE: ${{ github.base_ref }}
+          HEAD: ${{ github.head_ref }}
+        run: |
+          if [ "$BASE" = "main" ] && [ "$HEAD" != "develop" ] && [[ "$HEAD" != hotfix/* ]]; then
+            echo "::error::PRs into main must come from develop (or a hotfix/* branch). Open this PR against develop instead."
+            exit 1
+          fi
+          echo "OK: $HEAD → $BASE"
+
   build:
     name: Build & checks
     runs-on: ubuntu-latest
